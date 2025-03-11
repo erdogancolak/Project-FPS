@@ -5,6 +5,8 @@ public class AnimationController : MonoBehaviour
 {
     Animator animator;
 
+    public AudioClip weaponReadySound;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -32,5 +34,10 @@ public class AnimationController : MonoBehaviour
     public void setAvailability(int index)
     {
         WeaponManager.Instance.Availability = index == 0 ? false : true;
+    }
+
+    void SetSound()
+    {
+        WeaponManager.Instance.setSoundEffects(weaponReadySound);
     }
 }

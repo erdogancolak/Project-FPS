@@ -59,7 +59,13 @@ public class WeaponManager : MonoBehaviour
 
     [Header("BulletHoles")]
     [SerializeField] GameObject[] bulletHoles;
-    
+
+    [Header("Sound Effects")]
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip readySound;
+    [SerializeField] AudioClip fireSound;
+    [SerializeField] AudioClip reloadSound;
+
     private void Update()
     {
         Inputs();
@@ -71,7 +77,7 @@ public class WeaponManager : MonoBehaviour
         {
             StartFire();
         }
-        if((Input.GetKeyDown(KeyCode.R) || currentAmmo <= 0) && currentAmmo != maxAmmo && totalAmmo > 0 &&  !isFire)
+        if((Input.GetKeyDown(KeyCode.R) || currentAmmo <= 0) && currentAmmo != maxAmmo && totalAmmo > 0 &&  !isFire && !isReload)
         {
             StartReload();
         }
@@ -91,6 +97,7 @@ public class WeaponManager : MonoBehaviour
         }
 
         CreateMuzzleFlash();
+        setSoundEffects(fireSound);
     }
     public void EndFire()
     {
@@ -109,6 +116,7 @@ public class WeaponManager : MonoBehaviour
     {
         isReload = true;
         animationController.setBool(Reload_ID, isReload);
+        setSoundEffects(reloadSound);
     }
     public void EndReload()
     {
@@ -134,12 +142,6 @@ public class WeaponManager : MonoBehaviour
                 break;
         }
     }
-
-    void setAmmoText(int Ammo , int TotalAmmo)
-    {
-        ammoText.text = (Ammo + " / " + TotalAmmo);
-    }
-
     
     void setTotalAmmo()
     {
@@ -177,5 +179,11 @@ public class WeaponManager : MonoBehaviour
     public void WeaponDown()
     {
 
+    }
+
+    public void setSoundEffects(AudioClip soundEffect)
+    {
+        audioSource.clip = soundEffect;
+        audioSource.Play();
     }
 }
