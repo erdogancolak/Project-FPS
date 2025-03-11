@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
     float Horizontal;
     float Vertical;
 
+    public bool isWalking;
+    public bool isRunning;
+
     [Header("Speed")]
     [SerializeField] float walkSpeed;
     [SerializeField] float runSpeed;
@@ -39,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Jump();
+        CheckMovement();
     }
     private void FixedUpdate()
     {
@@ -56,10 +60,32 @@ public class PlayerMovement : MonoBehaviour
     }
     float TotalSpeed()
     {
-        if(Input.GetKey(KeyCode.LeftShift))
+        if(Input.GetKey(KeyCode.LeftShift) && !WeaponManager.Instance.isFire)
             return runSpeed;
         else
             return walkSpeed;
+    }
+
+    void CheckMovement()
+    {
+        if((Horizontal != 0 || Vertical != 0) || (Horizontal != 0 && Vertical != 0))
+            {
+            if(TotalSpeed() == runSpeed)
+            {
+                isWalking = false;
+                isRunning = true;
+            }
+            if(TotalSpeed() == walkSpeed)
+            {
+                isWalking = true;
+                isRunning = false;
+            }
+        }
+        else
+        {
+            isWalking = false;
+            isRunning = false;
+        }
     }
 
     void Jump()

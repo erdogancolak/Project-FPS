@@ -32,12 +32,18 @@ public class PlayerCamera : MonoBehaviour
 
     private void MouseLook()
     {
-        X = Input.GetAxisRaw("Mouse X") * Sensivity;
+        X += Input.GetAxisRaw("Mouse X") * Sensivity;
         Y += Input.GetAxisRaw("Mouse Y") * Sensivity;
 
         Y = Mathf.Clamp(Y, -80, 80);
 
         CameraParent.localRotation = Quaternion.Euler(-Y, 0f, 0f);
-        Character.Rotate(Vector3.up * X);
+        Character.localRotation = Quaternion.Euler(0, X, 0);
+    }
+
+    public void addRecoil(float x, float y)
+    {
+        X += x;
+        Y += y;
     }
 }

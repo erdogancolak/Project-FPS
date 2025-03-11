@@ -8,23 +8,44 @@ public class WeaponManager : MonoBehaviour
         Instance = this;
     }
 
+    [Header("WeaponParent and Camera")]
+    [SerializeField] Transform currentWeaponParent;
+    [SerializeField] Transform camera;
+
     [Header("Availability")]
     [HideInInspector] public bool Availability;
 
     [Header("Animations")]
     [SerializeField] AnimationController animationController;
 
-    [SerializeField] bool isFire;
+    public bool isFire;
 
     [SerializeField] string Fire_ID;
     [SerializeField] string Reload_ID;
     [SerializeField] string WeaponDown_ID;
+    [SerializeField] string Aim_ID;
 
     [Header("Ammo")]
     [SerializeField] int currentAmmo;
     
     [SerializeField] float fireRate;
     float lastShotTime;
+
+    [Header("Aim")]
+    public bool isAim;
+
+    [SerializeField] Vector3 originalPos;
+    [SerializeField] Vector3 aimPos;
+
+    [SerializeField] Quaternion originalRot;
+    [SerializeField] Quaternion aimRot;
+
+    [SerializeField] float aimSpeed;
+
+    [SerializeField] float originalFOV;
+    [SerializeField] float aimFOV;
+
+    [SerializeField] GameObject crosshair;
 
     [Header("Reload")]
     [SerializeField] bool isReload;
@@ -57,6 +78,16 @@ public class WeaponManager : MonoBehaviour
     RaycastHit hit;
     float fireRange = Mathf.Infinity;
 
+    [Header("Bullet Scatters")]
+    [SerializeField] Quaternion maxScatters;
+    [SerializeField] Quaternion minScatters;
+
+    Quaternion currentScatters;
+
+    [Header("Recoil")]
+    [SerializeField] Vector2 maxRecoil;
+    [SerializeField] Vector2 minRecoil;
+
     [Header("BulletHoles")]
     [SerializeField] GameObject[] bulletHoles;
 
@@ -71,6 +102,10 @@ public class WeaponManager : MonoBehaviour
         Inputs();
         setTotalAmmo();
     }
+    private void LateUpdate()
+    {
+        setAim();
+    }
     void Inputs()
     {
         if(Input.GetMouseButton(0) && Availability && !isReload && currentAmmo > 0 && Time.time - lastShotTime >= fireRate)
@@ -81,6 +116,10 @@ public class WeaponManager : MonoBehaviour
         {
             StartReload();
         }
+        if(Input.GetMouseButtonDown(1))
+        {
+            setAimBool();
+        }
     }
     void StartFire()
     {
@@ -89,7 +128,7 @@ public class WeaponManager : MonoBehaviour
         currentAmmo--;
         lastShotTime = Time.time;
 
-        if (Physics.Raycast(CameraController.Instance.Camera.position, CameraController.Instance.Camera.forward, out hit, fireRange))
+        if (Physics.Raycast(CameraController.Instance.Camera.position, setScatter() * CameraController.Instance.Camera.forward, out hit, fireRange))
         {
             GameObject bulletHoleCopy = Instantiate(bulletHoles[Random.Range(0, bulletHoles.Length)], hit.point, Quaternion.LookRotation(hit.normal));
             bulletHoleCopy.transform.parent = hit.transform;
@@ -97,6 +136,7 @@ public class WeaponManager : MonoBehaviour
         }
 
         CreateMuzzleFlash();
+        setRecoil();
         setSoundEffects(fireSound);
     }
     public void EndFire()
@@ -111,6 +151,32 @@ public class WeaponManager : MonoBehaviour
         Destroy(muzzleFlashCopy , 5f);
 
         bulletShellsEffect.Play();
+    }
+
+    Quaternion setScatter()
+    {
+        if(PlayerMovement.Instance.isWalking)
+        {
+            currentScatters = Quaternion.Euler(Random.Range(-maxScatters.eulerAngles.x, maxScatters.eulerAngles.x), Random.Range(-maxScatters.eulerAngles.y, maxScatters.eulerAngles.y), Random.Range(-maxScatters.eulerAngles.z, maxScatters.eulerAngles.z));
+        }
+        else if(isAim || (!PlayerMovement.Instance.isRunning && !PlayerMovement.Instance.isWalking))
+        {
+            currentScatters = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            currentScatters = Quaternion.Euler(Random.Range(-minScatters.eulerAngles.x, minScatters.eulerAngles.x), Random.Range(-minScatters.eulerAngles.y, minScatters.eulerAngles.y), Random.Range(-minScatters.eulerAngles.z, minScatters.eulerAngles.z));
+        }
+
+        return currentScatters;
+    }
+
+    void setRecoil()
+    {
+        float x = Random.Range(maxRecoil.x, minRecoil.x);
+        float y = Random.Range(maxRecoil .y, minRecoil.y);
+
+        PlayerCamera.Instance.addRecoil(x, y);
     }
     void StartReload()
     {
@@ -175,6 +241,31 @@ public class WeaponManager : MonoBehaviour
         {
             return InventoryAmount;
         }
+    }
+
+    void setAimBool()
+    {
+        isAim = !isAim;
+    }
+
+    void setAim()
+    {
+        if(isAim)
+        {
+            currentWeaponParent.localPosition = Vector3.Lerp(currentWeaponParent.localPosition, aimPos, aimSpeed * Time.deltaTime * 5f);
+            currentWeaponParent.localRotation = Quaternion.Lerp(currentWeaponParent.localRotation, aimRot , aimSpeed * Time.deltaTime * 5f);
+            camera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(camera.GetComponent<Camera>().fieldOfView, aimFOV, aimSpeed * Time.deltaTime * 5f);
+            crosshair.SetActive(false);
+        }
+        else
+        {
+            currentWeaponParent.localPosition = Vector3.Lerp(currentWeaponParent.localPosition, originalPos, aimSpeed * Time.deltaTime * 5f);
+            currentWeaponParent.localRotation = Quaternion.Lerp(currentWeaponParent.localRotation, originalRot, aimSpeed * Time.deltaTime * 5f);
+            camera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(camera.GetComponent<Camera>().fieldOfView, originalFOV, aimSpeed * Time.deltaTime * 5f);
+            crosshair.SetActive(true);
+        }
+        animationController.setBool(Aim_ID, isAim);
+        
     }
     public void WeaponDown()
     {
