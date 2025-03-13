@@ -85,8 +85,10 @@ public class WeaponManager : MonoBehaviour
     Quaternion currentScatters;
 
     [Header("Recoil")]
-    [SerializeField] Vector2 maxRecoil;
     [SerializeField] Vector2 minRecoil;
+    [SerializeField] Vector2 maxRecoil;
+    
+    [SerializeField] CameraRecoil cameraRecoil;
 
     [Header("BulletHoles")]
     [SerializeField] GameObject[] bulletHoles;
@@ -137,6 +139,7 @@ public class WeaponManager : MonoBehaviour
 
         CreateMuzzleFlash();
         setRecoil();
+        cameraRecoil.ApplyRecoil();
         setSoundEffects(fireSound);
     }
     public void EndFire()
@@ -173,8 +176,8 @@ public class WeaponManager : MonoBehaviour
 
     void setRecoil()
     {
-        float x = Random.Range(maxRecoil.x, minRecoil.x);
-        float y = Random.Range(maxRecoil .y, minRecoil.y);
+        float x = Random.Range(minRecoil.x, maxRecoil.x);
+        float y = Random.Range(minRecoil .y, maxRecoil.y);
 
         PlayerCamera.Instance.addRecoil(x, y);
     }
