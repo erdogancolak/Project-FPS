@@ -18,6 +18,7 @@ public class WeaponManager : MonoBehaviour
     [Header("WeaponSlots")]
     [SerializeField] WeaponVariables weaponSlot1;
     [SerializeField] WeaponVariables weaponSlot2;
+    [SerializeField] WeaponVariables weaponSlot3;
 
     [Header("Animations")]
     [SerializeField] string Fire_ID;
@@ -31,12 +32,15 @@ public class WeaponManager : MonoBehaviour
     
     [Header("Ammo")]
     int currentAmmo;
+    public int bulletsPerShot;
     
     float fireRate;
     float lastShotTime;
 
     [Header("Aim")]
     public bool isAim;
+
+    public bool canAim;
 
     Vector3 originalPos;
     Vector3 aimPos;
@@ -103,6 +107,7 @@ public class WeaponManager : MonoBehaviour
     AudioClip reloadSound;
     private void Start()
     {
+        currentAmmo = weaponSlot1.currentAmmo;
         ChangeWeapon(weaponSlot2);
     }
     private void Update()
@@ -129,15 +134,20 @@ public class WeaponManager : MonoBehaviour
             setAimBool();
         }
 
-        if((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetAxis("Mouse ScrollWheel") > 0 ) && weaponSlot1 != null && !isFire)
+        if(Input.GetKeyDown(KeyCode.Alpha1) && weaponSlot1 != null && !isFire)
         {
             isAim = false;
             ChangeWeapon(weaponSlot1);
         }
-        if ((Input.GetKeyDown(KeyCode.Alpha2) || Input.GetAxis("Mouse ScrollWheel") < 0 ) && weaponSlot2 != null && !isFire)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && weaponSlot2 != null && !isFire)
         {
             isAim = false;
             ChangeWeapon(weaponSlot2);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponSlot2 != null && !isFire)
+        {
+            isAim = false;
+            ChangeWeapon(weaponSlot3);
         }
     }
     void StartFire()
@@ -146,14 +156,15 @@ public class WeaponManager : MonoBehaviour
         animationController.setBool(Fire_ID, isFire);
         currentAmmo--;
         lastShotTime = Time.time;
-
-        if (Physics.Raycast(CameraController.Instance.Camera.position, setScatter() * CameraController.Instance.Camera.forward, out hit, fireRange))
+        for(int i = 0;i < bulletsPerShot;i++)
         {
-            GameObject bulletHoleCopy = Instantiate(bulletHoles[Random.Range(0, bulletHoles.Length)], hit.point, Quaternion.LookRotation(hit.normal));
-            bulletHoleCopy.transform.parent = hit.transform;
-            Destroy(bulletHoleCopy, 10f);
+            if (Physics.Raycast(CameraController.Instance.Camera.position, setScatter() * CameraController.Instance.Camera.forward, out hit, fireRange))
+            {
+                GameObject bulletHoleCopy = Instantiate(bulletHoles[Random.Range(0, bulletHoles.Length)], hit.point, Quaternion.LookRotation(hit.normal));
+                bulletHoleCopy.transform.parent = hit.transform;
+                Destroy(bulletHoleCopy, 10f);
+            }
         }
-
         CreateMuzzleFlash();
         setRecoil();
         cameraRecoil.ApplyRecoil();
@@ -176,6 +187,10 @@ public class WeaponManager : MonoBehaviour
     Quaternion setScatter()
     {
         if(PlayerMovement.Instance.isWalking)
+        {
+            currentScatters = Quaternion.Euler(Random.Range(-maxScatters.eulerAngles.x, maxScatters.eulerAngles.x), Random.Range(-maxScatters.eulerAngles.y, maxScatters.eulerAngles.y), Random.Range(-maxScatters.eulerAngles.z, maxScatters.eulerAngles.z));
+        }
+        else if (currentWeaponParent.GetComponent<WeaponVariables>().weapon_ID == "Shotgun")
         {
             currentScatters = Quaternion.Euler(Random.Range(-maxScatters.eulerAngles.x, maxScatters.eulerAngles.x), Random.Range(-maxScatters.eulerAngles.y, maxScatters.eulerAngles.y), Random.Range(-maxScatters.eulerAngles.z, maxScatters.eulerAngles.z));
         }
@@ -270,6 +285,11 @@ public class WeaponManager : MonoBehaviour
 
     void setAim()
     {
+        if(!canAim)
+        {
+            return;
+        }
+
         if(isAim && !isReload && Availability)
         {
             currentWeaponParent.localPosition = Vector3.Lerp(currentWeaponParent.localPosition, aimPos, aimSpeed * Time.deltaTime * 5f);
@@ -297,8 +317,11 @@ public class WeaponManager : MonoBehaviour
             currentWeaponParent.GetComponent<WeaponVariables>().currentAmmo = currentAmmo;
 
             currentWeaponParent = Weapon.WeaponParent;
+            bulletsPerShot = Weapon.bulletPerShot;
 
             animationController = Weapon.animationController;
+            animationController.setAvailability(0);
+
             fireSound = Weapon.fireSound;
             reloadSound = Weapon.reloadSound;
 
@@ -311,6 +334,8 @@ public class WeaponManager : MonoBehaviour
             WeaponTip = Weapon.WeaponTip;
             muzzleFlashEffect = Weapon.muzzleFlashEffect;
             bulletShellsEffect = Weapon.bulletShellsEffect;
+
+            canAim = Weapon.canAim;
 
             originalPos = Weapon.originalPos;
             aimPos = Weapon.aimPos;

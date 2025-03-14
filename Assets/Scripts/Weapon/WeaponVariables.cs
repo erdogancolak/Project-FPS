@@ -20,6 +20,7 @@ public class WeaponVariables : MonoBehaviour
     public float fireRate;
 
     [Header("Reload")]
+    public int bulletPerShot;
     public int maxAmmo;
     public WeaponManager.AmmoType Type;
 
@@ -31,6 +32,8 @@ public class WeaponVariables : MonoBehaviour
     public ParticleSystem bulletShellsEffect;
 
     [Header("Aim")]
+    public bool canAim;
+
     public Vector3 originalPos;
     public Vector3 aimPos;
 
