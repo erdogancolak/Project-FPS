@@ -10,56 +10,60 @@ public class WeaponManager : MonoBehaviour
 
     [Header("WeaponParent and Camera")]
     [SerializeField] Transform currentWeaponParent;
-    [SerializeField] Transform camera;
+    [SerializeField] Transform weaponCamera;
 
     [Header("Availability")]
     [HideInInspector] public bool Availability;
 
+    [Header("WeaponSlots")]
+    [SerializeField] WeaponVariables weaponSlot1;
+    [SerializeField] WeaponVariables weaponSlot2;
+
     [Header("Animations")]
-    [SerializeField] AnimationController animationController;
-
-    public bool isFire;
-
     [SerializeField] string Fire_ID;
     [SerializeField] string Reload_ID;
     [SerializeField] string WeaponDown_ID;
     [SerializeField] string Aim_ID;
 
-    [Header("Ammo")]
-    [SerializeField] int currentAmmo;
+    AnimationController animationController;
+
+    [HideInInspector] public bool isFire;
     
-    [SerializeField] float fireRate;
+    [Header("Ammo")]
+    int currentAmmo;
+    
+    float fireRate;
     float lastShotTime;
 
     [Header("Aim")]
     public bool isAim;
 
-    [SerializeField] Vector3 originalPos;
-    [SerializeField] Vector3 aimPos;
+    Vector3 originalPos;
+    Vector3 aimPos;
 
-    [SerializeField] Quaternion originalRot;
-    [SerializeField] Quaternion aimRot;
+    Quaternion originalRot;
+    Quaternion aimRot;
 
-    [SerializeField] float aimSpeed;
+    float aimSpeed;
 
-    [SerializeField] float originalFOV;
-    [SerializeField] float aimFOV;
+    float originalFOV;
+    float aimFOV;
 
     [SerializeField] GameObject crosshair;
 
     [Header("Reload")]
-    [SerializeField] bool isReload;
-    [SerializeField] int maxAmmo;
+    [HideInInspector] public bool isReload;
+    int maxAmmo;
     [SerializeField] int totalAmmo;
     [SerializeField] TMP_Text ammoText;
-    [SerializeField] AmmoType Type;
+    AmmoType Type;
 
     [Header("MuzzleFlash")]
-    [SerializeField] Transform WeaponTip;
-    [SerializeField] GameObject muzzleFlashEffect;
+    Transform WeaponTip;
+    GameObject muzzleFlashEffect;
 
     [Header("BulletShells")]
-    [SerializeField] ParticleSystem bulletShellsEffect;
+    ParticleSystem bulletShellsEffect;
     public enum AmmoType 
     { 
         _5_56,
@@ -79,14 +83,14 @@ public class WeaponManager : MonoBehaviour
     float fireRange = Mathf.Infinity;
 
     [Header("Bullet Scatters")]
-    [SerializeField] Quaternion maxScatters;
-    [SerializeField] Quaternion minScatters;
+    Quaternion maxScatters;
+    Quaternion minScatters;
 
     Quaternion currentScatters;
 
     [Header("Recoil")]
-    [SerializeField] Vector2 minRecoil;
-    [SerializeField] Vector2 maxRecoil;
+    Vector2 minRecoil;
+    Vector2 maxRecoil;
     
     [SerializeField] CameraRecoil cameraRecoil;
 
@@ -95,10 +99,12 @@ public class WeaponManager : MonoBehaviour
 
     [Header("Sound Effects")]
     [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip readySound;
-    [SerializeField] AudioClip fireSound;
-    [SerializeField] AudioClip reloadSound;
-
+    AudioClip fireSound;
+    AudioClip reloadSound;
+    private void Start()
+    {
+        ChangeWeapon(weaponSlot2);
+    }
     private void Update()
     {
         Inputs();
@@ -121,6 +127,17 @@ public class WeaponManager : MonoBehaviour
         if(Input.GetMouseButtonDown(1))
         {
             setAimBool();
+        }
+
+        if((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetAxis("Mouse ScrollWheel") > 0 ) && weaponSlot1 != null && !isFire)
+        {
+            isAim = false;
+            ChangeWeapon(weaponSlot1);
+        }
+        if ((Input.GetKeyDown(KeyCode.Alpha2) || Input.GetAxis("Mouse ScrollWheel") < 0 ) && weaponSlot2 != null && !isFire)
+        {
+            isAim = false;
+            ChangeWeapon(weaponSlot2);
         }
     }
     void StartFire()
@@ -253,22 +270,67 @@ public class WeaponManager : MonoBehaviour
 
     void setAim()
     {
-        if(isAim)
+        if(isAim && !isReload && Availability)
         {
             currentWeaponParent.localPosition = Vector3.Lerp(currentWeaponParent.localPosition, aimPos, aimSpeed * Time.deltaTime * 5f);
             currentWeaponParent.localRotation = Quaternion.Lerp(currentWeaponParent.localRotation, aimRot , aimSpeed * Time.deltaTime * 5f);
-            camera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(camera.GetComponent<Camera>().fieldOfView, aimFOV, aimSpeed * Time.deltaTime * 5f);
+            weaponCamera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(weaponCamera.GetComponent<Camera>().fieldOfView, aimFOV, aimSpeed * Time.deltaTime * 5f);
             crosshair.SetActive(false);
         }
         else
         {
             currentWeaponParent.localPosition = Vector3.Lerp(currentWeaponParent.localPosition, originalPos, aimSpeed * Time.deltaTime * 5f);
             currentWeaponParent.localRotation = Quaternion.Lerp(currentWeaponParent.localRotation, originalRot, aimSpeed * Time.deltaTime * 5f);
-            camera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(camera.GetComponent<Camera>().fieldOfView, originalFOV, aimSpeed * Time.deltaTime * 5f);
+            weaponCamera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(weaponCamera.GetComponent<Camera>().fieldOfView, originalFOV, aimSpeed * Time.deltaTime * 5f);
             crosshair.SetActive(true);
         }
         animationController.setBool(Aim_ID, isAim);
-        
+    }
+
+    void ChangeWeapon(WeaponVariables Weapon)
+    {
+        if(Weapon.WeaponParent != currentWeaponParent)
+        {
+            currentWeaponParent.gameObject.SetActive(false);
+            Weapon.WeaponParent.gameObject.SetActive(true);
+
+            currentWeaponParent.GetComponent<WeaponVariables>().currentAmmo = currentAmmo;
+
+            currentWeaponParent = Weapon.WeaponParent;
+
+            animationController = Weapon.animationController;
+            fireSound = Weapon.fireSound;
+            reloadSound = Weapon.reloadSound;
+
+            fireRate = Weapon.fireRate;
+
+            currentAmmo = Weapon.currentAmmo;
+            maxAmmo = Weapon.maxAmmo;
+            Type = Weapon.Type;
+
+            WeaponTip = Weapon.WeaponTip;
+            muzzleFlashEffect = Weapon.muzzleFlashEffect;
+            bulletShellsEffect = Weapon.bulletShellsEffect;
+
+            originalPos = Weapon.originalPos;
+            aimPos = Weapon.aimPos;
+
+            originalRot = Weapon.originalRot;
+            aimRot = Weapon.aimRot;
+
+            aimSpeed = Weapon.aimSpeed;
+
+            originalFOV = Weapon.originalFOV;
+            aimFOV = Weapon.aimFOV;
+
+            maxScatters = Weapon.maxScatters;
+            minScatters = Weapon.minScatters;
+
+            maxRecoil = Weapon.maxRecoil;
+            minRecoil = Weapon.minRecoil;
+
+            isReload = false;
+        }
     }
     public void WeaponDown()
     {

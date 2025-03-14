@@ -303,13 +303,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 163616605}
+  - component: {fileID: 163616606}
   m_Layer: 8
   m_Name: BarettaParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &163616605
 Transform:
   m_ObjectHideFlags: 0
@@ -325,7 +326,43 @@ Transform:
   m_Children:
   - {fileID: 522852651}
   m_Father: {fileID: 282465136}
-  m_LocalEulerAnglesHint: {x: 355.83, y: 356.4, z: 0.00000001337562}
+  m_LocalEulerAnglesHint: {x: 355.83, y: 356.4, z: 0}
+--- !u!114 &163616606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163616604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbc5200d48b81e429b85bbbffea2c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon_ID: Baretta
+  isRifle: 0
+  WeaponParent: {fileID: 163616605}
+  animationController: {fileID: 6794944213374757133}
+  fireSound: {fileID: 8300000, guid: 71573207b77b8ba4cac3bce603efb7f7, type: 3}
+  reloadSound: {fileID: 8300000, guid: 8c45da5815d3c894794eaf40ae2337fa, type: 3}
+  currentAmmo: 20
+  fireRate: 0.3
+  maxAmmo: 20
+  Type: 2
+  WeaponTip: {fileID: 103233660}
+  muzzleFlashEffect: {fileID: 6693299221407126025, guid: e92545d497a2b3c4984a757b563da483, type: 3}
+  bulletShellsEffect: {fileID: 1214165725}
+  originalPos: {x: 0.2, y: 0.408, z: 0.33}
+  aimPos: {x: 0, y: 0.565, z: 0.33}
+  originalRot: {x: -0.036364235, y: -0.031390127, z: -0.001142798, w: 0.9988448}
+  aimRot: {x: 0.00008727408, y: 0.00008725884, z: 0.00008725884, w: 1}
+  aimSpeed: 3
+  originalFOV: 60
+  aimFOV: 32
+  maxScatters: {x: 0.025014363, y: 0.023820842, z: 0.02382084, w: 0.99911934}
+  minScatters: {x: 0.011471636, y: 0.011214249, z: 0.0112142535, w: 0.9998083}
+  minRecoil: {x: -0.15, y: 0.25}
+  maxRecoil: {x: 0.15, y: 0.39}
 --- !u!1 &167078988
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,41 +1027,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeaponParent: {fileID: 1747984508}
-  camera: {fileID: 2075351011}
+  weaponCamera: {fileID: 2075351011}
   Availability: 0
-  animationController: {fileID: 919132147894716931}
-  isFire: 0
+  weaponSlot1: {fileID: 1747984509}
+  weaponSlot2: {fileID: 163616606}
   Fire_ID: Fire
   Reload_ID: Reload
   WeaponDown_ID: Weapon Down
   Aim_ID: Aim
-  currentAmmo: 30
-  fireRate: 0.1
+  isFire: 0
   isAim: 0
-  originalPos: {x: 0.19, y: 0.36, z: 0.39}
-  aimPos: {x: 0.19, y: 0.36, z: 0.39}
-  originalRot: {x: -0.036364235, y: -0.031390127, z: -0.001142798, w: 0.9988448}
-  aimRot: {x: 0.00008727408, y: 0.00008725884, z: 0.00008725884, w: 1}
-  aimSpeed: 3
-  originalFOV: 60
-  aimFOV: 32
   crosshair: {fileID: 1464251597}
   isReload: 0
-  maxAmmo: 30
   totalAmmo: 0
   ammoText: {fileID: 1212088167}
-  Type: 1
-  WeaponTip: {fileID: 43794029}
-  muzzleFlashEffect: {fileID: 6693299221407126025, guid: e92545d497a2b3c4984a757b563da483, type: 3}
-  bulletShellsEffect: {fileID: 1483895188}
   _5_56_Count: 100
-  _7_62_Count: 90
+  _7_62_Count: 120
   _9mm_Count: 120
   _45cal_Count: 36
-  maxScatters: {x: 0.025014356, y: 0.023820845, z: 0.02382084, w: 0.99911934}
-  minScatters: {x: 0.011471632, y: 0.011214254, z: 0.011214249, w: 0.9998083}
-  minRecoil: {x: -0.2, y: 0.4}
-  maxRecoil: {x: 0.2, y: 0.6}
   cameraRecoil: {fileID: 2075351015}
   bulletHoles:
   - {fileID: 4670390839486900919, guid: 738fd1c3424bc164686a66bdb3733531, type: 3}
@@ -1034,9 +1054,6 @@ MonoBehaviour:
   - {fileID: 6529717427892152101, guid: a078bf6c163dfa24ab19167f387f6bdf, type: 3}
   - {fileID: 1198909742789138684, guid: 875d9d29ae78404448ec61248920fc4b, type: 3}
   audioSource: {fileID: 282465138}
-  readySound: {fileID: 8300000, guid: d902f0d739cb69b48a66f0b95f3d6dcb, type: 3}
-  fireSound: {fileID: 8300000, guid: f73ce1e118ee96f4197208098f97f7a1, type: 3}
-  reloadSound: {fileID: 8300000, guid: ff3fa9bb01fd8fa40a7e3d8024c8a755, type: 3}
 --- !u!82 &282465138
 AudioSource:
   m_ObjectHideFlags: 0
@@ -14709,13 +14726,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1747984508}
+  - component: {fileID: 1747984509}
   m_Layer: 8
   m_Name: AK-47Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1747984508
 Transform:
   m_ObjectHideFlags: 0
@@ -14724,14 +14742,50 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747984507}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.036364306, y: -0.031390306, z: -0.0011428067, w: 0.99884486}
-  m_LocalPosition: {x: 0.19, y: 0.36, z: 0.39}
+  m_LocalRotation: {x: -0.034899585, y: 0, z: 0, w: 0.99939084}
+  m_LocalPosition: {x: 0, y: 0.465, z: 0.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 167078989}
   m_Father: {fileID: 282465136}
-  m_LocalEulerAnglesHint: {x: 355.83, y: 356.4, z: 0.00000001337562}
+  m_LocalEulerAnglesHint: {x: -4, y: 0, z: 0}
+--- !u!114 &1747984509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747984507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbc5200d48b81e429b85bbbffea2c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon_ID: AK-47
+  isRifle: 1
+  WeaponParent: {fileID: 1747984508}
+  animationController: {fileID: 919132147894716931}
+  fireSound: {fileID: 8300000, guid: f73ce1e118ee96f4197208098f97f7a1, type: 3}
+  reloadSound: {fileID: 8300000, guid: ff3fa9bb01fd8fa40a7e3d8024c8a755, type: 3}
+  currentAmmo: 30
+  fireRate: 0.1
+  maxAmmo: 30
+  Type: 1
+  WeaponTip: {fileID: 43794029}
+  muzzleFlashEffect: {fileID: 6693299221407126025, guid: e92545d497a2b3c4984a757b563da483, type: 3}
+  bulletShellsEffect: {fileID: 1483895188}
+  originalPos: {x: 0.19, y: 0.36, z: 0.39}
+  aimPos: {x: 0, y: 0.465, z: 0.39}
+  originalRot: {x: -0.036364235, y: -0.031390127, z: -0.001142798, w: 0.9988448}
+  aimRot: {x: -0.034899488, y: 0.00009025886, z: 0.00009025886, w: 0.99939084}
+  aimSpeed: 3
+  originalFOV: 60
+  aimFOV: 32
+  maxScatters: {x: 0.025014363, y: 0.023820842, z: 0.02382084, w: 0.99911934}
+  minScatters: {x: 0.011471636, y: 0.0112142535, z: 0.011214249, w: 0.9998083}
+  minRecoil: {x: -0.2, y: 0.4}
+  maxRecoil: {x: 0.2, y: 0.6}
 --- !u!1 &1841365878
 GameObject:
   m_ObjectHideFlags: 0
@@ -15196,8 +15250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce4b6a0fbb38dd4094fe49201028739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilAmount: 2
-  recoilSpeed: 10
+  recoilAmount: 3
+  recoilSpeed: 25
   returnSpeed: 5
 --- !u!1 &2129737819
 GameObject:

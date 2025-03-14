@@ -5,7 +5,7 @@ public class AnimationController : MonoBehaviour
 {
     Animator animator;
 
-    public AudioClip weaponReadySound;
+    [SerializeField] AudioClip weaponReadySound;
 
     private void Start()
     {
