@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class AnimationController : MonoBehaviour
 {
-    public Animator animator;
+    [HideInInspector] public Animator animator;
 
     [SerializeField] AudioClip weaponReadySound;
 

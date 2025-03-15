@@ -414,6 +414,7 @@ MonoBehaviour:
   minScatters: {x: 0.011471636, y: 0.011214249, z: 0.0112142535, w: 0.9998083}
   minRecoil: {x: -0.15, y: 0.25}
   maxRecoil: {x: 0.15, y: 0.39}
+  Crosshair: {fileID: 21300000, guid: b8e78032f8af0954784d1fe9e5a09187, type: 3}
 --- !u!1 &167078988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082,8 +1083,8 @@ MonoBehaviour:
   weaponCamera: {fileID: 2075351011}
   Availability: 0
   weaponSlot1: {fileID: 1747984509}
-  weaponSlot2: {fileID: 163616606}
-  weaponSlot3: {fileID: 1168870048}
+  weaponSlot2: {fileID: 1168870048}
+  weaponSlot3: {fileID: 163616606}
   Fire_ID: Fire
   Reload_ID: Reload
   WeaponDown_ID: Weapon Down
@@ -2696,6 +2697,7 @@ GameObject:
   - component: {fileID: 1099863688}
   - component: {fileID: 1099863687}
   - component: {fileID: 1099863686}
+  - component: {fileID: 1099863690}
   m_Layer: 5
   m_Name: UI-Canvas
   m_TagString: Untagged
@@ -2787,6 +2789,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1099863690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099863685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c63a6f2a355ec4ebc6d8d82a05a0cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CrosshairImage: {fileID: 1464251599}
 --- !u!1 &1109440459
 GameObject:
   m_ObjectHideFlags: 0
@@ -3204,6 +3219,7 @@ MonoBehaviour:
   minScatters: {x: 0.03607422, y: 0.033639763, z: 0.03363976, w: 0.9982161}
   minRecoil: {x: -0.2, y: 1.5}
   maxRecoil: {x: 0.2, y: 1.9}
+  Crosshair: {fileID: 21300000, guid: e7e80d39e3e102147a3be13caa7cd3d7, type: 3}
 --- !u!1 &1212088166
 GameObject:
   m_ObjectHideFlags: 0
@@ -14945,6 +14961,7 @@ MonoBehaviour:
   minScatters: {x: 0.011471636, y: 0.0112142535, z: 0.011214249, w: 0.9998083}
   minRecoil: {x: -0.2, y: 0.4}
   maxRecoil: {x: 0.2, y: 0.6}
+  Crosshair: {fileID: 21300000, guid: b8e78032f8af0954784d1fe9e5a09187, type: 3}
 --- !u!1 &1841365878
 GameObject:
   m_ObjectHideFlags: 0

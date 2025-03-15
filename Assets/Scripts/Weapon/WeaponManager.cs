@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager Instance;
@@ -101,6 +102,9 @@ public class WeaponManager : MonoBehaviour
     [Header("BulletHoles")]
     [SerializeField] GameObject[] bulletHoles;
 
+    [Header("Crosshair")]
+    Sprite crosshairSprite;
+
     [Header("Sound Effects")]
     [SerializeField] AudioSource audioSource;
     AudioClip fireSound;
@@ -108,7 +112,7 @@ public class WeaponManager : MonoBehaviour
     private void Start()
     {
         currentAmmo = weaponSlot1.currentAmmo;
-        ChangeWeapon(weaponSlot2);
+        ChangeWeapon(weaponSlot3);
     }
     private void Update()
     {
@@ -223,7 +227,7 @@ public class WeaponManager : MonoBehaviour
     {
         isReload = false;
         animationController.setBool(Reload_ID, isReload);
-
+            
         int amount = setReloadAmount(totalAmmo);
         currentAmmo += amount;
 
@@ -355,6 +359,10 @@ public class WeaponManager : MonoBehaviour
             minRecoil = Weapon.minRecoil;
 
             isReload = false;
+
+            crosshairSprite = Weapon.Crosshair;
+
+            crosshair.GetComponent<Image>().sprite = crosshairSprite;
         }
     }
     public void WeaponDown()

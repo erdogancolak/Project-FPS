@@ -52,4 +52,7 @@ public class WeaponVariables : MonoBehaviour
     [Header("Recoil")]
     public Vector2 minRecoil;
     public Vector2 maxRecoil;
+
+    [Header("Crosshair")]
+    public Sprite Crosshair;
 }
