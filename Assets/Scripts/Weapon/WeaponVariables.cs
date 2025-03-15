@@ -3,10 +3,26 @@ using static WeaponManager;
 
 public class WeaponVariables : MonoBehaviour
 {
+    public static WeaponVariables Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     [Header("ID")]
     public string weapon_ID;
-    public bool isRifle;
     public Transform WeaponParent;
+
+    [Header("Weapon Type")]
+    public weaponType TypeWeapon;
+    public enum weaponType
+    {
+        Pistol,
+        Shotgun,
+        Smg,
+        Rifle,
+        Heavy,
+    }
 
     [Header("Animations")]
     public AnimationController animationController;

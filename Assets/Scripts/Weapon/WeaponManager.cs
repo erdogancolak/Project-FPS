@@ -20,6 +20,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] WeaponVariables weaponSlot1;
     [SerializeField] WeaponVariables weaponSlot2;
     [SerializeField] WeaponVariables weaponSlot3;
+    [SerializeField] WeaponVariables weaponSlot4;
 
     [Header("Animations")]
     [SerializeField] string Fire_ID;
@@ -148,10 +149,15 @@ public class WeaponManager : MonoBehaviour
             isAim = false;
             ChangeWeapon(weaponSlot2);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponSlot2 != null && !isFire)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponSlot3 != null && !isFire)
         {
             isAim = false;
             ChangeWeapon(weaponSlot3);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4) && weaponSlot4 != null && !isFire)
+        {
+            isAim = false;
+            ChangeWeapon(weaponSlot4);
         }
     }
     void StartFire()
@@ -190,11 +196,11 @@ public class WeaponManager : MonoBehaviour
 
     Quaternion setScatter()
     {
-        if(PlayerMovement.Instance.isWalking)
+        if (PlayerMovement.Instance.isWalking)
         {
             currentScatters = Quaternion.Euler(Random.Range(-maxScatters.eulerAngles.x, maxScatters.eulerAngles.x), Random.Range(-maxScatters.eulerAngles.y, maxScatters.eulerAngles.y), Random.Range(-maxScatters.eulerAngles.z, maxScatters.eulerAngles.z));
         }
-        else if (currentWeaponParent.GetComponent<WeaponVariables>().weapon_ID == "Shotgun")
+        else if (currentWeaponParent.GetComponent<WeaponVariables>().TypeWeapon == WeaponVariables.weaponType.Shotgun)
         {
             currentScatters = Quaternion.Euler(Random.Range(-maxScatters.eulerAngles.x, maxScatters.eulerAngles.x), Random.Range(-maxScatters.eulerAngles.y, maxScatters.eulerAngles.y), Random.Range(-maxScatters.eulerAngles.z, maxScatters.eulerAngles.z));
         }
