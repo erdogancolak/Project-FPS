@@ -31,6 +31,9 @@ public class WeaponVariables : MonoBehaviour
     public AudioClip fireSound;
     public AudioClip reloadSound;
 
+    [Header("Reload")]
+    public float reloadTime;
+
     [Header("Ammo")]
     public int currentAmmo;
     public float fireRate;

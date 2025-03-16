@@ -21,6 +21,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] WeaponVariables weaponSlot2;
     [SerializeField] WeaponVariables weaponSlot3;
     [SerializeField] WeaponVariables weaponSlot4;
+    [SerializeField] WeaponVariables weaponSlot5;
 
     [Header("Animations")]
     [SerializeField] string Fire_ID;
@@ -61,6 +62,7 @@ public class WeaponManager : MonoBehaviour
     [HideInInspector] public bool isReload;
     int maxAmmo;
     [SerializeField] int totalAmmo;
+    float reloadTime;
     [SerializeField] TMP_Text ammoText;
     AmmoType Type;
 
@@ -130,6 +132,10 @@ public class WeaponManager : MonoBehaviour
         {
             StartFire();
         }
+        if(Input.GetMouseButtonUp(0))
+        {
+            EndFire();
+        }
         if((Input.GetKeyDown(KeyCode.R) || currentAmmo <= 0) && currentAmmo != maxAmmo && totalAmmo > 0 &&  !isFire && !isReload)
         {
             StartReload();
@@ -158,6 +164,11 @@ public class WeaponManager : MonoBehaviour
         {
             isAim = false;
             ChangeWeapon(weaponSlot4);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5) && weaponSlot5 != null && !isFire)
+        {
+            isAim = false;
+            ChangeWeapon(weaponSlot5);
         }
     }
     void StartFire()
@@ -191,7 +202,10 @@ public class WeaponManager : MonoBehaviour
         GameObject muzzleFlashCopy = Instantiate(muzzleFlashEffect, WeaponTip.position,WeaponTip.rotation,WeaponTip);
         Destroy(muzzleFlashCopy , 5f);
 
-        bulletShellsEffect.Play();
+        if (bulletShellsEffect != null)
+            bulletShellsEffect.Play();
+        else
+            return;
     }
 
     Quaternion setScatter()
@@ -341,6 +355,8 @@ public class WeaponManager : MonoBehaviour
             maxAmmo = Weapon.maxAmmo;
             Type = Weapon.Type;
 
+            reloadTime = Weapon.reloadTime;
+
             WeaponTip = Weapon.WeaponTip;
             muzzleFlashEffect = Weapon.muzzleFlashEffect;
             bulletShellsEffect = Weapon.bulletShellsEffect;
@@ -379,6 +395,9 @@ public class WeaponManager : MonoBehaviour
     public void setSoundEffects(AudioClip soundEffect)
     {
         audioSource.clip = soundEffect;
+        audioSource.pitch = reloadTime;
         audioSource.Play();
+        if(!audioSource.isPlaying)
+            audioSource.pitch = 1;
     }
 }
