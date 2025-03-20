@@ -22,8 +22,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isRunning;
 
     [Header("Speed")]
-    [SerializeField] float walkSpeed;
-    [SerializeField] float runSpeed;
+    public float walkSpeed;
+    public float runSpeed;
 
     [Header("Jump")]
     [SerializeField] float JumpForce;

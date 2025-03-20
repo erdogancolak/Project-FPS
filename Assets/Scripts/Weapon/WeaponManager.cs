@@ -8,6 +8,8 @@ public class WeaponManager : MonoBehaviour
     {
         Instance = this;
     }
+    [Header("PlayerMovement")]
+    [SerializeField] PlayerMovement playerMovement;
 
     [Header("WeaponParent and Camera")]
     [SerializeField] Transform currentWeaponParent;
@@ -68,6 +70,7 @@ public class WeaponManager : MonoBehaviour
 
     [Header("MuzzleFlash")]
     Transform WeaponTip;
+    Transform WeaponTip2;
     GameObject muzzleFlashEffect;
 
     [Header("BulletShells")]
@@ -199,6 +202,11 @@ public class WeaponManager : MonoBehaviour
 
     void CreateMuzzleFlash()
     {
+        if(WeaponTip2 != null)
+        {
+            GameObject muzzleFlashCopy2 = Instantiate(muzzleFlashEffect, WeaponTip2.position, WeaponTip2.rotation, WeaponTip2);
+            Destroy(muzzleFlashCopy2, 5f);
+        }
         GameObject muzzleFlashCopy = Instantiate(muzzleFlashEffect, WeaponTip.position,WeaponTip.rotation,WeaponTip);
         Destroy(muzzleFlashCopy , 5f);
 
@@ -343,6 +351,9 @@ public class WeaponManager : MonoBehaviour
             currentWeaponParent = Weapon.WeaponParent;
             bulletsPerShot = Weapon.bulletPerShot;
 
+            playerMovement.walkSpeed = Weapon.walkSpeed;
+            playerMovement.runSpeed = Weapon.runSpeed;
+
             animationController = Weapon.animationController;
             animationController.setAvailability(0);
 
@@ -358,6 +369,7 @@ public class WeaponManager : MonoBehaviour
             reloadTime = Weapon.reloadTime;
 
             WeaponTip = Weapon.WeaponTip;
+            WeaponTip2 = Weapon.WeaponTip2;
             muzzleFlashEffect = Weapon.muzzleFlashEffect;
             bulletShellsEffect = Weapon.bulletShellsEffect;
 

@@ -24,6 +24,10 @@ public class WeaponVariables : MonoBehaviour
         Heavy,
     }
 
+    [Header("Speed")]
+    public float walkSpeed;
+    public float runSpeed;
+
     [Header("Animations")]
     public AnimationController animationController;
 
@@ -45,6 +49,7 @@ public class WeaponVariables : MonoBehaviour
 
     [Header("MuzzleFlash")]
     public Transform WeaponTip;
+    public Transform WeaponTip2;
     public GameObject muzzleFlashEffect;
 
     [Header("BulletShells")]
