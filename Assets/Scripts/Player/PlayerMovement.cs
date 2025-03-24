@@ -14,6 +14,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform Character;
     [SerializeField] Transform GroundCheck;
 
+    [SerializeField] WeaponManager weaponManager;
+    [SerializeField] float currentWeaponSpeed;
+
     [Header("Movement")]
     float Horizontal;
     float Vertical;
@@ -32,17 +35,24 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     Vector3 gravityVector;
     float gravityScale = -9.81f;
-    bool isGrounded;
+    [HideInInspector] public bool isGrounded;
+
+    [Header("Crouch")]
+    [SerializeField] float normalHeight;
+    [SerializeField] float crouchHeight;
+    [HideInInspector] public bool isCrouch;
+    float crouchSpeed;
 
     void Start()
     {
-        
+        var currentWeapon = weaponManager.currentWeaponParent;
     }
 
     void Update()
     {
         Jump();
         CheckMovement();
+        HandleCrouch();
     }
     private void FixedUpdate()
     {
@@ -91,7 +101,9 @@ public class PlayerMovement : MonoBehaviour
     void Jump()
     {
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
-            gravityVector.y = Mathf.Sqrt(JumpForce * -2f * gravityScale / 1000f);
+        {
+            gravityVector.y = Mathf.Sqrt(JumpForce * -2f * gravityScale);
+        }
     }
 
     void Gravity()
@@ -99,10 +111,38 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(GroundCheck.position, 0.4f, groundLayer);
 
         if (!isGrounded)
-            gravityVector.y += gravityScale * Mathf.Pow(Time.deltaTime, 2);
-        else if(gravityVector.y < 0)
-            gravityVector.y = -0.15f;
+        {
+            gravityVector.y += gravityScale * Time.deltaTime;
+        }
+        else if (gravityVector.y < 0)
+        {
+            gravityVector.y = -2f;
+        }
 
-        CharController.Move(gravityVector);
+        CharController.Move(gravityVector * Time.deltaTime);
+    }
+
+    void HandleCrouch()
+    {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            if (!isCrouch)
+            {
+                isCrouch = true;
+                CharController.height = crouchHeight;
+                crouchSpeed = walkSpeed * 0.3f;
+                walkSpeed = crouchSpeed;
+            }
+        }
+        else
+        {
+            if (isCrouch)
+            {
+                isCrouch = false;
+                CharController.height = normalHeight;
+                walkSpeed = WeaponManager.Instance.currentWeaponParent.GetComponent<WeaponVariables>().walkSpeed;
+                runSpeed = WeaponManager.Instance.currentWeaponParent.GetComponent<WeaponVariables>().runSpeed;
+            }
+        }
     }
 }

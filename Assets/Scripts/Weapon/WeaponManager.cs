@@ -12,7 +12,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] PlayerMovement playerMovement;
 
     [Header("WeaponParent and Camera")]
-    [SerializeField] Transform currentWeaponParent;
+    public Transform currentWeaponParent;
     [SerializeField] Transform weaponCamera;
 
     [Header("Availability")]
@@ -354,6 +354,12 @@ public class WeaponManager : MonoBehaviour
             playerMovement.walkSpeed = Weapon.walkSpeed;
             playerMovement.runSpeed = Weapon.runSpeed;
 
+            if (playerMovement.isCrouch)
+            {
+                playerMovement.walkSpeed *= 0.3f;
+                playerMovement.runSpeed *= 0.3f;
+            }
+
             animationController = Weapon.animationController;
             animationController.setAvailability(0);
 
@@ -398,10 +404,6 @@ public class WeaponManager : MonoBehaviour
 
             crosshair.GetComponent<Image>().sprite = crosshairSprite;
         }
-    }
-    public void WeaponDown()
-    {
-
     }
 
     public void setSoundEffects(AudioClip soundEffect)

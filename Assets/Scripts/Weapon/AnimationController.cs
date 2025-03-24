@@ -27,10 +27,6 @@ public class AnimationController : MonoBehaviour
     {
         WeaponManager.Instance.EndReload();
     }
-    void WeaponDown()
-    {
-        WeaponManager.Instance.WeaponDown();
-    }
     public void setAvailability(int index)
     {
         WeaponManager.Instance.Availability = index == 0 ? false : true;
