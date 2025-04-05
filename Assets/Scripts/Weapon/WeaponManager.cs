@@ -24,6 +24,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] WeaponVariables weaponSlot3;
     [SerializeField] WeaponVariables weaponSlot4;
     [SerializeField] WeaponVariables weaponSlot5;
+    [SerializeField] WeaponVariables weaponSlot6;
 
     [Header("Animations")]
     [SerializeField] string Fire_ID;
@@ -172,6 +173,11 @@ public class WeaponManager : MonoBehaviour
         {
             isAim = false;
             ChangeWeapon(weaponSlot5);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6) && weaponSlot6 != null && !isFire)
+        {
+            isAim = false;
+            ChangeWeapon(weaponSlot6);
         }
     }
     void StartFire()

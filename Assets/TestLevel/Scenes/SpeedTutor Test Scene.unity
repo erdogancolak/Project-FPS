@@ -6124,11 +6124,12 @@ MonoBehaviour:
   currentWeaponParent: {fileID: 1747984508}
   weaponCamera: {fileID: 2075351011}
   Availability: 0
-  weaponSlot1: {fileID: 355525274}
-  weaponSlot2: {fileID: 1100319590}
+  weaponSlot1: {fileID: 1747984509}
+  weaponSlot2: {fileID: 1082983565}
   weaponSlot3: {fileID: 913191005}
-  weaponSlot4: {fileID: 1082983565}
+  weaponSlot4: {fileID: 355525274}
   weaponSlot5: {fileID: 536683796}
+  weaponSlot6: {fileID: 23064077}
   Fire_ID: Fire
   Reload_ID: Reload
   WeaponDown_ID: Weapon Down
